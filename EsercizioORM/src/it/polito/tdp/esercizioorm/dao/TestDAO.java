@@ -7,12 +7,12 @@ public class TestDAO {
 
 	public static void main(String[] args) {
 		
-		CorsoDAO cdao = new CorsoDAO();
+	/*	CorsoDAO cdao = new CorsoDAO();
 		for (Corso c : cdao.getTuttiCorsi())
 			System.out.println(c);
 		
 		StudenteDAO sdao = new StudenteDAO();
 		for (Studente s : sdao.getTuttiStudenti()) 
-			System.out.println(s);
+			System.out.println(s);*/
 	}
 }

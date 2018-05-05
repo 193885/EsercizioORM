@@ -1,11 +1,16 @@
 package it.polito.tdp.esercizioorm.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Studente {
 
 	private int matricola;
 	private String nome;
 	private String cognome;
 	private String cds;
+	
+	private List <Corso> corsi;  //lista da popolare nel DAO
 
 	public Studente() {
 	}
@@ -15,6 +20,17 @@ public class Studente {
 		this.nome = nome;
 		this.cognome = cognome;
 		this.cds = cds;
+		
+		corsi = new ArrayList<>();
+		
+	}
+
+	public List<Corso> getCorsi() {
+		return corsi;
+	}
+
+	public void setCorsi(List<Corso> corsi) {
+		this.corsi = corsi;
 	}
 
 	public int getMatricola() {
