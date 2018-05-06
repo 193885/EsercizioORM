@@ -21,7 +21,7 @@ public class CorsoDAO {
 		
 		try {
 			
-			Connection conn = ConnectDB.getConnection();
+			Connection conn = ConnectDBCP.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			ResultSet res = st.executeQuery() ;
 			
@@ -54,7 +54,7 @@ public class CorsoDAO {
 
 		try {
 			
-			Connection conn = ConnectDB.getConnection();
+			Connection conn = ConnectDBCP.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			
 			st.setInt( 1, s.getMatricola() );

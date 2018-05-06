@@ -28,7 +28,7 @@ public class Model {
 		corsoMap = new CorsoIdMap();
 		studMap = new StudenteIdMap();
 		
-		corsi= cdao.getTuttiCorsi(corsoMap); //cosi quando creo COrsi li inserisco in automatico nella Mappa
+		corsi= cdao.getTuttiCorsi(corsoMap); //cosi quando creo Corsi li inserisco in automatico nella Mappa
 		
 	//	System.out.println(corsi.size());		
 	
@@ -115,4 +115,65 @@ public class Model {
 		
 		return -1; // se non trovo matricola torno -1
 	}
+	
+	public boolean iscriviStudenteACorso(int matricola, String codins) {
+		
+		Corso corso = corsoMap.get(codins);
+		
+		Studente studente = studMap.get(matricola);
+		
+		
+		if(studente == null || corso == null) {
+			
+			return false;
+			
+			//uno dei due non esiste e quindi non posso fare iscrizione
+		}
+		
+		//devo aggiornare prima il db e poi la memoria perchè se la prima fallisse non avrei piu' la consistenza dei dati
+		
+		boolean iscrizione = sdao.iscriviStudenteACorso(studente, corso);
+		
+		//meglio se al DAO passo sempre degli oggetti,il model non ha visione su come questi oggetti siano salvati nel db
+
+		if( iscrizione ) {
+			 //aggiornamento DB andato a buon fine, aggiorno riferimenti in memoria
+		
+			//conviene inserire una if di controllo sulla presenza di duplicati (sto usando liste e non set) perchè in base
+			//a come scrivo le query i duplicati potrebbero non essere ignorati
+			
+			if(!studente.getCorsi().contains(corso))
+			
+				studente.getCorsi().add(corso);
+			
+			if(!corso.getStudenti().contains(studente))
+		
+				corso.getStudenti().add(studente);
+			
+			return true;
+		}
+		
+		return false; // inserimento nel DAO fallito 
+	}
+	
+	
+	/*
+	 * Questo metodo viene utilizzato solo per testare le performance di ConnectDBCP.
+	 */
+	public void testCP() {
+		double avgTime = 0;
+		for (int i = 0; i < 10; i++) {
+			long start = System.nanoTime();
+			List<Studente> studenti = sdao.getTuttiStudenti(new StudenteIdMap());
+			for (Studente s : studenti) {
+				sdao.studenteIscrittoACorso(s.getMatricola(), "01NBAPG");
+			}
+			double tt = (System.nanoTime() - start) / 10e9;
+			System.out.println(tt);
+			avgTime += tt;
+		}
+		System.out.println("AvgTime (mean on 10 loops): " + avgTime/10);
+}
+	
+	
 }

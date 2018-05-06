@@ -21,7 +21,7 @@ public class StudenteDAO {
 		List<Studente> result = new ArrayList<Studente>();
 
 		try {
-			Connection conn = ConnectDB.getConnection();
+			Connection conn = ConnectDBCP.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql);
 			ResultSet res = st.executeQuery();
 
@@ -47,7 +47,7 @@ public class StudenteDAO {
 
 		try {
 			
-			Connection conn = ConnectDB.getConnection();
+			Connection conn = ConnectDBCP.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			
 			st.setString(1,c.getCodIns());
@@ -71,4 +71,67 @@ public class StudenteDAO {
 			throw new RuntimeException(e) ;
 		}
 	}
+
+	
+	/*vediamo ora come il pattern ORM gestisce l'aggiornamento di informazioni nel database: le info vanno salvate sia in memoria che nel db 
+	 * per mantenere la consistenza sui dati*/
+	
+	public boolean iscriviStudenteACorso(Studente studente, Corso corso) {
+
+		String sql = "INSERT IGNORE INTO `iscritticorsi`.`iscrizione` (`matricola`, `codins`) VALUES(?,?)";
+		boolean returnValue = false;
+		
+		try {
+			Connection conn = ConnectDBCP.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, studente.getMatricola());
+			st.setString(2, corso.getCodIns());
+			
+			int res = st.executeUpdate();	
+
+			if (res == 1)
+				returnValue = true;
+
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Errore Db");
+		}
+		
+		return returnValue;
+}
+	
+	
+	/*
+	 * Questo metodo viene utilizzato solo per testare le performance di ConnectDBCP.
+	 */
+	public boolean studenteIscrittoACorso(int matricola, String codins) {
+		String sql = "Select matricola, codins from iscrizione where matricola = ? and codins = ?";
+		boolean result = false;
+		
+		try {
+			
+			Connection conn = ConnectDBCP.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, matricola);
+			st.setString(2, codins);
+			ResultSet res = st.executeQuery();
+
+			if (res.next()) {
+				result = true;
+			}
+
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+}
+
+
+
+
+
 }
