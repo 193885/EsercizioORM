@@ -13,6 +13,8 @@ public class Studente {
 	private List <Corso> corsi;  //lista da popolare nel DAO
 
 	public Studente() {
+		
+		corsi = new ArrayList<Corso>();
 	}
 
 	public Studente(int matricola, String nome, String cognome, String cds) {
@@ -21,7 +23,7 @@ public class Studente {
 		this.cognome = cognome;
 		this.cds = cds;
 		
-		corsi = new ArrayList<>();
+		corsi = new ArrayList<Corso>();
 		
 	}
 

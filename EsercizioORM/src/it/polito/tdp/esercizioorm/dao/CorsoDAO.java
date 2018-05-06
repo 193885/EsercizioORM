@@ -16,14 +16,17 @@ public class CorsoDAO {
 	public List<Corso> getTuttiCorsi(CorsoIdMap corsoMap) {
 		
 		String sql = "SELECT codins, crediti, nome, pd FROM corso" ;
+		
 		List<Corso> result = new ArrayList<>() ;
 		
 		try {
+			
 			Connection conn = ConnectDB.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql) ;
 			ResultSet res = st.executeQuery() ;
 			
 			while(res.next()) {
+				
 				Corso c = new Corso(res.getString("codins"),
 						res.getInt("crediti"),
 						res.getString("nome"),
@@ -47,19 +50,20 @@ public class CorsoDAO {
 
 	public void getCorsiFromStudente(Studente s, CorsoIdMap corsoMap) {
 	
-		String sql = "SELECT c.codins, crediti, nome, pd FROM corso as c, iscrizione as i WHERE c.codins = i.codins and i.matricola=?" ;
+		String sql = "SELECT c.codins, crediti, nome, pd FROM corso as c, iscrizione as i WHERE c.codins = i.codins and i.matricola= ? " ;
 
 		try {
+			
 			Connection conn = ConnectDB.getConnection();
 			PreparedStatement st = conn.prepareStatement(sql) ;
-			st.setInt(1,s.getMatricola());
+			
+			st.setInt( 1, s.getMatricola() );
+			
 			ResultSet res = st.executeQuery() ;
 			
 			while(res.next()) {
-				Corso c = new Corso(res.getString("codins"),
-						res.getInt("crediti"),
-						res.getString("nome"),
-						res.getInt("pd") ) ;
+				
+				Corso c = new Corso(res.getString("codins"), res.getInt("crediti"), res.getString("nome"), res.getInt("pd") ) ;
 				
 				s.getCorsi().add(corsoMap.get(c));
 				
@@ -73,6 +77,5 @@ public class CorsoDAO {
 		} catch (SQLException e) {
 			throw new RuntimeException(e) ;
 		}
-		
 	}
 }

@@ -4,47 +4,48 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * 	Questa IdMap viene creata nel MODEL ma popolata nel DAO */
+ * 	Questa IdMap viene creata nel MODEL ma popolata nel DAO*/
 
-public class CorsoIdMap {
+public class StudenteIdMap {
 	
-	private Map <String, Corso> map;
+	private Map <Integer, Studente> map;
 	
-	public CorsoIdMap() {
+	public StudenteIdMap() {
 		
 		map = new HashMap<>();
 		
 	}
 	
-	public Corso get(Corso c) {
+	public Studente get(Studente s) {
 		
 		//passo oggetto intero e non solo un codCorso perchè se non è presente il 
 		//corso dovrò crearlo e poi aggiungerlo alla mappa
 		
-		Corso old = map.get(c.getCodIns());
+		Studente old = map.get(s.getMatricola());
 		
 		//in old viene salvato null se non c'è corrispondenza nella mappa o l'oggetto 
 		//associato a quel codIns che prima qualcuno aveva creato
 		
 		if(old == null) {
 			
-			map.put(c.getCodIns(), c);
+			map.put(s.getMatricola(), s);
 			
-			return c;
+			return s;
 		}
 		
 		return old;
 	}
 	
-	public void put(String codIns,Corso corso) {
+	public void put(Integer matricola,Studente s) {
 		
-		map.put(codIns, corso);
+		map.put(matricola, s);
 		
 	}
 
-	public Corso get(String codins) {
+	public Studente get(int matricola) {
+		
+		return map.get(matricola);
 
-		return map.get(codins);
 	}
 }
  
